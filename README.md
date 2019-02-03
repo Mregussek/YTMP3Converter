@@ -28,6 +28,6 @@ mateusz_rz@poczta.fm
 
 Cracow, Poland
 
-21.01.2019
+03.02.2019
 ## License
 This project is licensed under the GNU GPL3 License - see the LICENSE.md file for details.
