@@ -1,98 +1,96 @@
-from .search import searcher
-from .download import downloader
-from .convert import converter
-from .link import text
+"""
+
+Written by Mateusz Rzeczyca.
+Self-taught software developer
+03.02.2019
+
+"""
+
+from .search import Searcher
+from .download import Downloader
+from .convert import Converter
 import os
 import time
 
 
-class Youtube(searcher, downloader, converter, text):
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+class Youtube(Searcher, Downloader, Converter):
     def __init__(self):
-        searcher.__init__(self)
-        downloader.__init__(self)
-        converter.__init__(self)
-        text.__init__(self)
+        Searcher.__init__(self)
+        Downloader.__init__(self)
+        Converter.__init__(self)
 
     def menu(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
-        # shows menu
-        print("1. Podaj link do Yt")
-        print("2. Wyszukaj po tytule")
-        print("3. Wyjscie")
-
+        clear_screen()
+        print("1. Paste Youtube URL")
+        print("2. Find from title")
+        print("3. Exit")
         decision = input("> ")
 
         if decision == '1':
-            # user wants to paste link
-            self.link()
+            self.paste_url_option()
         elif decision == '2':
-            # user wants to search by title
-            self.title()
+            self.through_title()
         elif decision == '3':
-            # user decided to leave
-            exit()
+            exit(0)
         else:
-            # if unexpected number
             self.menu()
 
-    # function to download by video url
-    def link(self):
-        self.helperForLink()
-        # paste url
-        print("Wklej link do filmu: ")
-        yt = input("> ")
-        # get the right link
-        self.setTextToChange(yt)
-        url = self.setYtUrl()
-        # process it
-        self.process(url)
+    def paste_url_option(self):
+        clear_screen()
+        print("Paste URL: ")
+        url = input("> ")
+        name = self.get_video_name(url)
 
-    # function to download by typing title
-    def title(self):
-        print("Podaj tytul utworu: ")
-        yt = input("> ")
-        # search the first url of it
-        self.setTextToSearch(yt)
-        url = self.lookForUrl()
-        # use url as argument and process it
-        self.process(url)
+        url_name = {0: url,
+                    1: name}
 
-    # function to download music
-    def process(self, text):
-        self.setUrl(text)
-        videoName = self.getVideoName()
+        self.start_processing(url_name)
 
-        path = self.fileDownloadedTo()
+    def through_title(self):
+        clear_screen()
+        print("Write down the title: ")
+        text = input("> ")
 
+        self.set_text_to_search(text)
+        urls = self.look_for_urls()
+        url = self.choose_right_url(urls)
+
+        self.start_processing(url)
+
+    def start_processing(self, url):
+        self.set_url(url[0])
+        path = self.path_to_downloaded_file()
         self.download(path)
 
-        self.setAudioName(videoName)
-
-        self.convertVideo(path)
-
-        self.moveAudio(path)
-
-        self.deleteMp4(path)
+        self.set_audio_name(url[1])
+        self.convert_mp4_to_mp3(path)
+        self.move_audio(path)
+        self.delete_mp4(path)
 
         time.sleep(2)
-
-        # after everything return to menu
         self.menu()
 
-    # Gets path to download directory
-    def fileDownloadedTo(self):
-        main = os.path.expanduser('~')
-        downloadPath = os.path.join(main, 'Downloads')
-        newPath = downloadPath + r'\YtToMp3'
+    def choose_right_url(self, list_of_urls):
+        list_of_names = []
 
-        if not os.path.exists(newPath):
-            os.makedirs(newPath)
-        
-        return newPath
+        for url in list_of_urls:
+            name = self.get_video_name(url)
+            list_of_names.append(name)
 
-    def helperForLink(self):
-        print("To jest przykladowy link:")
-        print("https://www.youtube.com/watch?v=HluANRwPyNo")
-        print("Powinienes mi wkleic:")
-        print("> HluANRwPyNo")
-        print("-------")
+        meter = 1
+        clear_screen()
+        for name in list_of_names:
+            print('{}. {}'.format(meter, name))
+            meter += 1
+
+        print("Choose the index: ")
+        index = input('> ')
+
+        url_name = {0: list_of_urls[int(index) - 1],
+                    1: list_of_names[int(index) - 1]}
+
+        return url_name
