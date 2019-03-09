@@ -56,4 +56,19 @@ class Downloader(object):
 
         video_type.download(path, 'a')
 
+    def download(self, path, name):
+        try:
+            video = YouTube(self.url, on_progress_callback=self.check_progress)
+        except:
+            print("Got issue, try again!")
+            exit(0)
+
+        print("File will be downloaded to: {}".format(path))
+        video_type = video.streams.filter(progressive=True, file_extension="mp4").last()
+
+        global file_size
+        file_size = video_type.filesize
+
+        video_type.download(path, name)
+
 

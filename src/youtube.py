@@ -27,7 +27,8 @@ class Youtube(Searcher, Downloader, Converter):
         clear_screen()
         print("1. Paste Youtube URL")
         print("2. Find from title")
-        print("3. Exit")
+        print("3. Download Video")
+        print("4. Exit")
         decision = input("> ")
 
         if decision == '1':
@@ -35,6 +36,8 @@ class Youtube(Searcher, Downloader, Converter):
         elif decision == '2':
             self.through_title()
         elif decision == '3':
+            self.just_video()
+        elif decision == '4':
             exit(0)
         else:
             self.menu()
@@ -60,6 +63,19 @@ class Youtube(Searcher, Downloader, Converter):
         url = self.choose_right_url(urls)
 
         self.start_processing(url)
+
+    def just_video(self):
+        clear_screen()
+        print("Paste URL: ")
+        url = input("> ")
+        name = self.get_video_name(url)
+
+        url_name = {0: url,
+                    1: name}
+
+        self.set_url(url_name[0])
+        path = self.path_to_downloaded_file()
+        self.download(path, url_name[1])
 
     def start_processing(self, url):
         self.set_url(url[0])
