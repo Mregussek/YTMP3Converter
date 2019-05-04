@@ -75,7 +75,7 @@ class Youtube(Searcher, Downloader, Converter):
 
         self.set_url(url_name[0])
         path = self.path_to_downloaded_file()
-        self.download(path, url_name[1])
+        self.download_video(path, url_name[1])
 
     def start_processing(self, url):
         self.set_url(url[0])

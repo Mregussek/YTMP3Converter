@@ -56,7 +56,7 @@ class Downloader(object):
 
         video_type.download(path, 'a')
 
-    def download(self, path, name):
+    def download_video(self, path, name):
         try:
             video = YouTube(self.url, on_progress_callback=self.check_progress)
         except:
