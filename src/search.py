@@ -12,13 +12,34 @@ from bs4 import BeautifulSoup
 
 
 class Searcher(object):
+    """
+    Base class, which main point is to search YT url from given title.
+
+    Attributes:
+        textToSearch(str): title of the video
+    """
+
     def __init__(self):
         self.textToSearch = "None"
 
     def set_text_to_search(self, text):
+        """
+        Set class textToSearch attribute with parameter.
+        Setter method.
+
+        Args:
+            text(str): text which will be set
+        """
+
         self.textToSearch = text
 
     def look_for_urls(self):
+        """
+        Looks for some Youtube URLs with the title (textToSearch).
+
+        Returns:
+            tab_of_urls(list): contains urls of videos
+        """
         tab_of_urls = []
         query = urllib.parse.quote(self.textToSearch)
         url = "https://www.youtube.com/results?search_query=" + query
@@ -39,6 +60,15 @@ class Searcher(object):
 
     @staticmethod
     def if_yt_watch_url(text):
+        """
+        Decides whether given parameter is Youtube URL or not.
+
+        Args:
+            text(str): Youtube URL
+
+        Returns:
+            decision(bool): true if it YT URL, false if not
+        """
         if '/watch?' in text:
             return True
         else:
